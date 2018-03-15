@@ -27,7 +27,7 @@ def logout():
 # post articles
 @app.route('/art/add/', methods=['GET', 'POST'])
 def art_add():
-    return render_template("art_add.html")
+    return render_template("art_add.html", title="Post Articles")
 
 
 # edit articles
@@ -45,7 +45,7 @@ def art_del(id):
 # articles list
 @app.route('/art/list/', methods=['GET'])  # Involving route matching涉及路由匹配
 def art_list():
-    return render_template("art_list.html")
+    return render_template("art_list.html",title="Article List")
 
 
 if __name__ == '__main__':

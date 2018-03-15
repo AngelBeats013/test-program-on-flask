@@ -1,10 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h1>Article list</h1>
-</body>
-</html>
+{%extends "article_layout.html"%}
+{%block content%}
+<table class="table table-bordered">
+    <thead>
+    <!--tr是行，th是标题-->
+    <tr>
+        <th>title</th>
+        <th>catogety</th>
+        <th>cover</th>
+        <th>author</th>
+        <th>posttime</th>
+        <th>operation</th>
+    </tr>
+    </thead>
+    {% for v in range(1,11)%}
+    <tr>
+        <td>found water on mars</td>
+        <td>Tech</td>
+        <td>
+            <img data-src="holder.js/75x40">
+        </td>
+        <td>CWS</td>
+        <td>01/01/2018 12:00:00</td>
+        <td>
+            <button class="btn btn-sm btn-outline-warning">edit</button>
+            <button class="btn btn-sm btn-outline-danger">delete</button>
+        </td>
+    </tr>
+    {%endfor%}
+</table>
+<!--分页-->
+<nav>
+    <ul class="pagination">
+        <li class="page-item">
+            <a class="page-link" href="#">Last Page</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">1</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">2</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">3</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">4</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">5</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">Next Page</a>
+        </li>
+    </ul>
+</nav>
+{%endblock%}
+{%block js%}
+<script>
+    $(document).ready(function () {
+        $("#m2").addClass("active");
+    });
+</script>
+{%endblock%}
