@@ -9,13 +9,13 @@ app = Flask(__name__)
 # Login
 @app.route('/login/', methods=['GET', 'POST'])  # get 页面请求，post提交表单
 def login():
-    return render_template("login.html")
+    return render_template("login.html", title="Login")  # 把title变量传入
 
 
 # Register
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
-    return render_template("register.html")
+    return render_template("register.html", title="Register")
 
 
 # logout(302 redirect to login)
@@ -35,15 +35,18 @@ def art_add():
 def art_edit(id):
     return render_template("art_edit.html")
 
-#delete articles
+
+# delete articles
 @app.route('/art/del/<int:id>/', methods=['GET'])  # Involving route matching涉及路由匹配
 def art_del(id):
     return redirect('/art/list/')
 
-#articles list
+
+# articles list
 @app.route('/art/list/', methods=['GET'])  # Involving route matching涉及路由匹配
 def art_list():
     return render_template("art_list.html")
 
+
 if __name__ == '__main__':
-    app.run(debug=True, host='127.0.0.1', port=8080)
+    app.run(debug=True, host='127.0.0.1', port=8080)  # debug->see error on webpage
