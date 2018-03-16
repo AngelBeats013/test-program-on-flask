@@ -2,20 +2,22 @@
 # coding:utf8
 
 from flask import Flask, render_template, redirect, url_for
-
+from forms import LoginForm,RegisterForm,ArticleForm
 app = Flask(__name__)
-
+app.config["SECRET_KEY"]="123445"
 
 # Login
 @app.route('/login/', methods=['GET', 'POST'])  # get 页面请求，post提交表单
 def login():
-    return render_template("login.html", title="Login")  # 把title变量传入
+    form=LoginForm()
+    return render_template("login.html", title="Login",form=form)  # 把title变量传入
 
 
 # Register
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
-    return render_template("register.html", title="Register")
+    form=RegisterForm()
+    return render_template("register.html", title="Register",form=form)
 
 
 # logout(302 redirect to login)
@@ -27,7 +29,8 @@ def logout():
 # post articles
 @app.route('/art/add/', methods=['GET', 'POST'])
 def art_add():
-    return render_template("art_add.html", title="Post Articles")
+    form=ArticleForm()
+    return render_template("art_add.html", title="Post Articles",form=form)
 
 
 # edit articles

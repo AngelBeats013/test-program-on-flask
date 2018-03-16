@@ -3,26 +3,31 @@
 <form>
     <div class="form-group">
         <label>Account</label>
-        <input type="text" class="form-control" placeholder="write account">
+        <!--<input type="text" class="form-control" placeholder="write account">-->
+        {{form.name}}
         <!--class是样式-->
     </div>
      <div class="form-group">
         <label>Password</label>
-        <input type="password" class="form-control" placeholder="write password">
+        <!--<input type="password" class="form-control" placeholder="write password">-->
+        {{form.password}}
     </div>
     <div class="form-group">
         <label>Password Validate</label>
-        <input type="password" class="form-control" placeholder="write password again">
+        <!--<input type="password" class="form-control" placeholder="write password again">-->
+        {{form.repassword}}
     </div>
     <div class="form-group">
         <label>Verification code</label>
-        <input type="text" class="form-control" placeholder="write Verification code">
+        <!--<input type="text" class="form-control" placeholder="write Verification code">-->
+        {{form.varicode}}
 
         <img src="holder.js/180x50" style="margin-top: 6px">
     </div>
     <a href="/login/">Have Account, Login</a>
     <br>
-    <a class="btn btn-success" href="/login/">Register</a>
+    <!--<a class="btn btn-success" href="/login/">Register</a>-->
+    {{form.submit}}
 </form>
 {%endblock %}
 
