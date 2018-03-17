@@ -3,7 +3,7 @@
 # coding:utf8
 # session 保存会话
 from flask import Flask, render_template, redirect, url_for, flash, session, Response, request
-from forms import LoginForm, RegisterForm, ArticleForm
+from forms import LoginForm, RegisterForm, ArticleForm, EditArticleForm
 from models import User, db, Article
 from werkzeug.security import generate_password_hash
 from werkzeug.utils import secure_filename
@@ -17,7 +17,7 @@ from functools import wraps  # 登陆装饰器
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "123445"
-app.config["UP"] = os.path.join(os.path.dirname(__file__),"static/uploads")
+app.config["UP"] = os.path.join(os.path.dirname(__file__), "static/uploads")
 
 
 # 登陆装饰器,防止通过url跳过登陆
@@ -39,7 +39,7 @@ def login():
         data = form.data
         session["user"] = data["name"]
         # flash("login success","ok")
-        return redirect("/art/list/")
+        return redirect("/art/list/1/")
     return render_template("login.html", title="Login", form=form)  # 把title变量传入
 
 
@@ -110,22 +110,22 @@ def art_add():
         if not os.path.exists(app.config["UP"]):
             os.makedirs(app.config["UP"])
         # 保存文件
-        form.cover.data.save(app.config["UP"]+"/"+cover)
+        form.cover.data.save(app.config["UP"] + "/" + cover)
         # 获取用户id
-        user=User.query.filter_by(name=session["user"]).first()
-        user_id=user.id
+        user = User.query.filter_by(name=session["user"]).first()
+        user_id = user.id
         # 保存数据
-        article=Article(
+        article = Article(
             title=data["title"],
             category=data["category"],
-            author=user_id,
+            author=user.id,
             cover=cover,
             content=data["content"],
             addtime=datetime.utcnow().strftime("%Y-%m-%d %H-%M-%S")
         )
         db.session.add(article)
         db.session.commit()
-        flash("post success","ok")
+        flash("post success", "ok")
     return render_template("art_add.html", title="Post Articles", form=form)
 
 
@@ -133,21 +133,59 @@ def art_add():
 @app.route('/art/edit/<int:id>/', methods=['GET', 'POST'])  # Involving route matching涉及路由匹配
 @user_login_req
 def art_edit(id):
-    return render_template("art_edit.html")
+    form = EditArticleForm()
+    article = Article.query.get_or_404(int(id))
+    # get就赋初值
+    if request.method == 'GET':
+        form.content.data = article.content
+        form.category.data = article.category
+        form.cover.data = article.cover
+    # post就保存
+    if form.validate_on_submit():
+        data = form.data
+        # 上传logo
+        file = secure_filename(form.cover.data.filename)
+        cover = change_file_name(file)
+        if not os.path.exists(app.config["UP"]):
+            os.makedirs(app.config["UP"])
+        # 保存文件
+        form.cover.data.save(app.config["UP"] + "/" + cover)
+        article.title = data["title"]
+        article.cover = cover
+        article.content = data["content"]
+        article.category = data["category"]
+        db.session.add(article)
+        db.session.commit()
+        flash("edit succeed", "ok")
+    return render_template("art_edit.html", form=form, title="edit article", article=article)
 
 
 # delete articles
 @app.route('/art/del/<int:id>/', methods=['GET'])  # Involving route matching涉及路由匹配
 @user_login_req
 def art_del(id):
-    return redirect('/art/list/')
+    article = Article.query.get_or_404(int(id))
+    db.session.delete(article)
+    db.session.commit()
+    flash("delete <%s> succeed" % article.title, 'ok')
+    return redirect('/art/list/1/')
 
 
 # articles list
-@app.route('/art/list/', methods=['GET'])  # Involving route matching涉及路由匹配
+@app.route('/art/list/<int:page>/', methods=['GET'])  # Involving route matching涉及路由匹配
 @user_login_req
-def art_list():
-    return render_template("art_list.html", title="Article List")
+def art_list(page=None):
+    if page is None:
+        page = 1
+    user = User.query.filter_by(name=session["user"]).first()
+    # 分页
+    page_data = Article.query.filter_by(
+        author=user.id
+    ).order_by(
+        Article.addtime.desc()
+    ).paginate(page=page, per_page=1)
+    category = [(1, 'Tech'), (2, 'Funny'), (3, 'Life')]
+    return render_template("art_list.html", title="Article List", page_data=page_data, category=category)
 
 
 if __name__ == '__main__':

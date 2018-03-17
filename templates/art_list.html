@@ -1,4 +1,5 @@
 {%extends "article_layout.html"%}
+{%import "page.html" as page%}
 {%block content%}
 <table class="table table-bordered">
     <thead>
@@ -12,48 +13,25 @@
         <th>operation</th>
     </tr>
     </thead>
-    {% for v in range(1,11)%}
+    {% for v in page_data.items%}
     <tr>
-        <td>found water on mars</td>
-        <td>Tech</td>
+        <td>{{v.title}}</td>
+        <td>{{category[v.category-1][1]}}</td>
         <td>
-            <img data-src="holder.js/75x40">
+            <!--<img data-src="holder.js/75x40">-->
+            <img src="/static/uploads/{{v.cover}}" style="width: 75px;height: 40px">
         </td>
-        <td>CWS</td>
-        <td>01/01/2018 12:00:00</td>
+        <td>{{session["user"]}}</td>
+        <td>{{v.addtime}}</td>
         <td>
-            <button class="btn btn-sm btn-outline-warning">edit</button>
-            <button class="btn btn-sm btn-outline-danger">delete</button>
+            <a href="{{url_for('art_edit',id=v.id)}}" class="btn btn-sm btn-outline-warning">edit</a>
+            <a href="{{url_for('art_del',id=v.id)}}" class="btn btn-sm btn-outline-danger">delete</a>
         </td>
     </tr>
     {%endfor%}
 </table>
 <!--分页-->
-<nav>
-    <ul class="pagination">
-        <li class="page-item">
-            <a class="page-link" href="#">Last Page</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">1</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">2</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">3</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">4</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">5</a>
-        </li>
-        <li class="page-item">
-            <a class="page-link" href="#">Next Page</a>
-        </li>
-    </ul>
-</nav>
+{{page.page(page_data,'art_list')}}
 {%endblock%}
 {%block js%}
 <script>

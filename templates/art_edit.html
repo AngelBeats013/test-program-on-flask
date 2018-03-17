@@ -1,10 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h1>Article edit</h1>
-</body>
-</html>
+{%extends "article_layout.html"%}
+{%block css%}
+<script type="text/javascript" charset="UTF-8"
+        src="{{url_for('static',filename='ueditor/ueditor.config.js')}}"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="{{url_for('static',filename='ueditor/ueditor.all.min.js')}}"></script>
+<script type="text/javascript" charset="UTF-8"
+        src="{{url_for('static',filename='ueditor/lang/zh-cn/zh-cn.js')}}"></script>
+{%endblock%}
+{% block content%}
+<!--支持文件上传-->
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label>Title</label>
+        <input type="hidden", name="id" value={{article.id}}>
+        {{form.title(value=article.title)}}
+        {%for v in form.title.errors%}
+        <p style="color:red">{{v}}</p>
+        {%endfor%}
+        <!--<input type="text" class="form-control" placeholder="">-->
+    </div>
+    <div class="form-group">
+        <label>Label</label>
+        {{form.category}}
+        {%for v in form.category.errors%}
+        <p style="color:red">{{v}}</p>
+        {%endfor%}
+        <!--<select class="form-control">-->
+        <!--<option value="1">Tech</option>-->
+        <!--<option value="2">Funny</option>-->
+        <!--<option value="3">Life</option>-->
+        <!--</select>-->
+    </div>
+    <div class="form-group">
+        <label>Cover</label>
+        {{form.cover}}
+         {%for v in form.cover.errors%}
+        <p style="color:red">{{v}}</p>
+        {%endfor%}
+        <!--<input type="file" class="form-control-file" placeholder="">-->
+        <img src="/static/uploads/{{article.cover}}" style="height:160px;width: 300px;margin-top: 6px">
+        <br>
+        <!--<a class="btn btn-primary" style="margin-top: 6px">Post</a>-->
+    </div>
+    <div class="form-group">
+        <label>Content</label>
+        {{form.content}}
+         {%for v in form.content.errors%}
+        <p style="color:red">{{v}}</p>
+        {%endfor%}
+        <!--<textarea id="content" style="height: 300px; margin-right: 10px" ></textarea>-->
+    </div>
+    {{form.post}}
+    {{form.csrf_token}}
+    <!--<button type="button" class="btn btn-primary">Post</button>-->
+</form>
+{%endblock%}
+{%block js%}
+<script>
+    var ue = UE.getEditor("content");
+    $(document).ready(function () {
+        $("#m1").addClass("active");
+    });
+</script>
+{%endblock%}

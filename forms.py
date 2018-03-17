@@ -1,9 +1,9 @@
 from flask import session  # 验证码校验
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, SelectField, FileField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, SelectField, FileField, TextAreaField,IntegerField
 from wtforms.validators import DataRequired, EqualTo, ValidationError
 # 数据必须存在，密码和确认密码要相同,自定义验证信息
-from models import User
+from models import User,Article
 
 # 不能有重复的用户名
 '''
@@ -194,3 +194,82 @@ class ArticleForm(FlaskForm):
             "class": "btn btn-primary"
         }
     )
+    def validate_title(self,field):
+        title=field.data
+        article=Article.query.filter_by(title=self.title.data).first()
+        if article:
+            raise ValidationError("no duplicate title")
+
+'''
+edit article forms
+1.title
+2.category
+3.cover
+4.content
+5.post btn
+'''
+
+
+class EditArticleForm(FlaskForm):
+    id=IntegerField(
+        label="id",
+        validators=[
+            DataRequired("need id")
+        ]
+    )
+    title = StringField(
+        label="title",
+        validators=[
+            DataRequired("need title")
+        ],
+        description="title",
+        render_kw={
+            "class": "form-control",
+            "placeholder": "input title"
+        }
+    )
+    category = SelectField(
+        label="category",
+        validators=[
+            DataRequired("need category")
+        ],
+        description="category",
+        choices=[(1, 'Tech'), (2, 'Funny'), (3, 'Life')],
+        default=1,
+        coerce=int,  # 类型
+        render_kw={
+            "class": "form-control"
+        }
+    )
+    cover = FileField(
+        label="cover",
+        validators=[
+            DataRequired("need cover")
+        ],
+        description="cover",
+        render_kw={
+            "class": "form-control-file"  # 从html中对应表单中找到
+        }
+    )
+    content = TextAreaField(
+        label="content",
+        validators=[
+            DataRequired("need content")
+        ],
+        description="content",
+        render_kw={
+            "style": "height:300px",  # 从html中对应表单中找到
+            "id": "content"
+        }
+    )
+    post = SubmitField(
+        "Submit",
+        render_kw={
+            "class": "btn btn-primary"
+        }
+    )
+    def validate_title(self,field):
+        title=field.data
+        article=Article.query.filter_by(title=self.title.data).first()
+        if article:
+            raise ValidationError("no duplicate title")
