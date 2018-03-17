@@ -8,15 +8,22 @@
         src="{{url_for('static',filename='ueditor/lang/zh-cn/zh-cn.js')}}"></script>
 {%endblock%}
 {% block content%}
-<form>
+<!--支持文件上传-->
+<form method="post" enctype="multipart/form-data">
     <div class="form-group">
         <label>Title</label>
         {{form.title}}
+        {%for v in form.title.errors%}
+        <p style="color:red">{{v}}</p>
+        {%endfor%}
         <!--<input type="text" class="form-control" placeholder="">-->
     </div>
     <div class="form-group">
         <label>Label</label>
         {{form.category}}
+        {%for v in form.category.errors%}
+        <p style="color:red">{{v}}</p>
+        {%endfor%}
         <!--<select class="form-control">-->
         <!--<option value="1">Tech</option>-->
         <!--<option value="2">Funny</option>-->
@@ -26,6 +33,9 @@
     <div class="form-group">
         <label>Cover</label>
         {{form.cover}}
+         {%for v in form.cover.errors%}
+        <p style="color:red">{{v}}</p>
+        {%endfor%}
         <!--<input type="file" class="form-control-file" placeholder="">-->
         <img src="holder.js/300x160" style="margin-top: 6px">
         <br>
@@ -34,9 +44,13 @@
     <div class="form-group">
         <label>Content</label>
         {{form.content}}
+         {%for v in form.content.errors%}
+        <p style="color:red">{{v}}</p>
+        {%endfor%}
         <!--<textarea id="content" style="height: 300px; margin-right: 10px" ></textarea>-->
     </div>
     {{form.post}}
+    {{form.csrf_token}}
     <!--<button type="button" class="btn btn-primary">Post</button>-->
 </form>
 {%endblock%}

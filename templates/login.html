@@ -1,20 +1,31 @@
 {% extends "user_layout.html"%}
 {% block content%}
 <!--把form包裹进代码块然后输入模板user_layout-->
-<form>
+<form method="post">
+    {%for msg in get_flashed_messages(category_filter=['ok'])%}
+    <p style="color:green">{{msg}}</p>
+    {%endfor%}
     <div class="form-group">
         <label>Username</label>
         <!--<input type="text" class="form-control" placeholder="please write username">-->
         {{form.name}}
+         {% for v in form.name.errors%}
+        <p style="color:red;font-weight: bold">{{v}}</p>
+        {%endfor%}
     </div>
     <div class="form-group">
         <label>Password</label>
         <!--<input type="password" class="form-control" placeholder="please write password">-->
         {{form.password}}
+        {% for v in form.password.errors%}
+        <p style="color:red;font-weight: bold">{{v}}</p>
+        {%endfor%}
     </div>
     <a href="/register/">No Account</a>
     <br>
     <!--<a class="btn btn-primary" href="/art/list/">Login</a>-->
     {{form.submit}}
+    {{form.csrf_token}}
+    <!--表单令牌-->
 </form>
 {%endblock %}

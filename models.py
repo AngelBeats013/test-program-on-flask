@@ -1,11 +1,12 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import check_password_hash
 import pymysql
 from datetime import datetime
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:zszl15143121@127.0.0.1:3306/filesystem"
-app.config["SQLALCHEMY_TRACK_MODIFICATION"] = True
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 
 db = SQLAlchemy(app)
 
@@ -20,14 +21,17 @@ class User(db.Model):
     def __repr__(self):
         return "<User %r>" % self.name
 
+    def check_password(self, pwd):
+        return check_password_hash(self.pwd, pwd)
+
 
 class Article(db.Model):
     __tablename__ = "article"
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), unique=True, nullable=False)
     category = db.Column(db.Integer, nullable=False)
-    author = db.Column(db.Integer, nullable=False)
-    cover = db.Column(db.Integer, unique=True, nullable=False)
+    author = db.Column(db.Integer(), nullable=False)
+    cover = db.Column(db.String(255), unique=True, nullable=False)
     content = db.Column(db.Text, nullable=False)
     addtime = db.Column(db.DateTime, nullable=False)
 
